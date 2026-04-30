@@ -3,88 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABHAI - Aerial Based Hybrid Artificial Intelligence</title>
+    <title>ABHAI | Aerial Based Hybrid Artificial Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .heading { font-family: 'Space Grotesk', sans-serif; }
-        .hero { 
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://picsum.photos/id/1015/2000/1200') center/cover; 
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), 
+                        url('https://picsum.photos/id/1015/2000/1200') center/cover;
             height: 100vh;
         }
+        
+        .nav-link { position: relative; }
+        .nav-link:after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
+            background-color: #f97316; transition: all 0.3s;
+        }
+        .nav-link:hover:after { width: 100%; }
+        
+        .card-hover:hover { transform: translateY(-10px); }
     </style>
 </head>
 <body class="bg-neutral-950 text-white">
 
-    <!-- NAV -->
-    <nav class="sticky top-0 bg-neutral-950 border-b border-neutral-800 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-50 bg-neutral-950 border-b border-neutral-800">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center text-2xl">🦅</div>
-                <h1 class="heading text-3xl font-bold">ABHAI</h1>
+                <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">🦅</div>
+                <div>
+                    <h1 class="heading text-3xl font-bold tracking-tighter">ABHAI</h1>
+                    <p class="text-xs text-orange-400 -mt-1">AERIAL AI</p>
+                </div>
             </div>
-            <a href="#contact" class="bg-orange-500 px-6 py-3 rounded-2xl font-medium">Contact Us</a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#solutions" class="nav-link">Solutions</a>
+                <a href="#technology" class="nav-link">Technology</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            
+            <a href="#contact" class="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-rocket"></i> Deploy Now
+            </a>
         </div>
     </nav>
 
     <!-- HERO -->
-    <section class="hero flex items-center">
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <h1 class="heading text-6xl md:text-7xl font-bold leading-none mb-6">AERIAL BASED<br>HYBRID ARTIFICIAL INTELLIGENCE</h1>
-            <p class="text-2xl text-orange-400 mb-8">Official Indian Partner of Fire Eagle Paris</p>
+    <section id="home" class="hero flex items-center">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <span class="inline-block px-6 py-2 bg-orange-500/10 border border-orange-500/30 rounded-full text-orange-400 text-sm mb-6">
+                Official Indian Partner of Fire Eagle • Paris
+            </span>
+            <h1 class="heading text-6xl md:text-7xl font-bold leading-none tracking-tighter mb-6">
+                AERIAL BASED<br>HYBRID ARTIFICIAL<br>INTELLIGENCE
+            </h1>
+            <p class="text-2xl text-neutral-300 max-w-2xl mx-auto mb-10">
+                Advanced autonomous drone systems with real-time Edge AI for India
+            </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#contact" class="bg-white text-black px-8 py-4 rounded-3xl font-semibold text-lg">Get Started</a>
+                <a href="#contact" class="bg-white text-black px-10 py-5 rounded-3xl font-semibold text-lg hover:bg-orange-500 hover:text-white transition">Get Started</a>
+                <a href="#solutions" class="border border-white px-10 py-5 rounded-3xl font-semibold text-lg hover:bg-white/10 transition">Explore Solutions</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTIONS -->
+    <section id="solutions" class="py-24 bg-white text-neutral-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="heading text-5xl font-bold text-center mb-4">Our Solutions</h2>
+            <p class="text-center text-xl text-neutral-600 mb-16">Built on Fire Eagle technology, tuned for Indian conditions</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
+                    <div class="text-6xl mb-6">🔥</div>
+                    <h3 class="text-2xl font-semibold mb-3">Forest Fire Detection</h3>
+                    <p class="text-neutral-600">Early smoke &amp; fire detection in Telangana, Western Ghats &amp; Himalayas. Alerts in under 5 minutes.</p>
+                </div>
+                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
+                    <div class="text-6xl mb-6">🏭</div>
+                    <h3 class="text-2xl font-semibold mb-3">Industrial Security</h3>
+                    <p class="text-neutral-600">24/7 perimeter monitoring, pipeline inspection &amp; critical infrastructure protection.</p>
+                </div>
+                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
+                    <div class="text-6xl mb-6">🌾</div>
+                    <h3 class="text-2xl font-semibold mb-3">Agriculture &amp; Disaster</h3>
+                    <p class="text-neutral-600">Crop health monitoring, flood mapping &amp; rapid disaster response using hybrid AI.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECHNOLOGY -->
+    <section id="technology" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="heading text-5xl font-bold text-center mb-16">Powered by Fire Eagle DNA</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="flex gap-6">
+                        <div class="text-5xl font-bold text-orange-500">01</div>
+                        <div>
+                            <h4 class="text-2xl font-semibold">Edge AI Processing</h4>
+                            <p class="text-neutral-400">On-drone intelligence – works offline in remote areas.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="text-5xl font-bold text-orange-500">02</div>
+                        <div>
+                            <h4 class="text-2xl font-semibold">Autonomous Swarms</h4>
+                            <p class="text-neutral-400">Multiple drones working together with computer vision.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="text-5xl font-bold text-orange-500">03</div>
+                        <div>
+                            <h4 class="text-2xl font-semibold">India-Tuned Models</h4>
+                            <p class="text-neutral-400">Optimized for Indian terrain, weather &amp; flora.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-neutral-900 p-12 rounded-3xl text-center">
+                    <i class="fa-solid fa-drone text-8xl text-orange-400 mb-8"></i>
+                    <p class="text-3xl font-medium">Real-time AI Inference</p>
+                    <p class="text-neutral-400 mt-4">4K video • 60fps • Zero latency</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="py-24 bg-white text-neutral-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="heading text-5xl font-bold text-center mb-16">Live Deployments</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-neutral-100 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/1015/600/400" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <p class="text-orange-600 text-sm">TELANGANA • LIVE</p>
+                        <p class="font-semibold">Nallamala Forest Fire Watch</p>
+                    </div>
+                </div>
+                <div class="bg-neutral-100 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/201/600/400" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <p class="text-orange-600 text-sm">HYDERABAD</p>
+                        <p class="font-semibold">Smart City Surveillance</p>
+                    </div>
+                </div>
+                <div class="bg-neutral-100 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/870/600/400" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <p class="text-orange-600 text-sm">WESTERN GHATS</p>
+                        <p class="font-semibold">Wildlife Corridor Monitoring</p>
+                    </div>
+                </div>
+                <div class="bg-neutral-100 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/1016/600/400" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <p class="text-orange-600 text-sm">BORDER AREA</p>
+                        <p class="font-semibold">Autonomous Patrol</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="py-20 bg-white text-neutral-900">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
+    <section id="contact" class="py-24 bg-neutral-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16">
                 <div>
-                    <h2 class="text-5xl font-bold mb-8">Ready to Deploy ABHAI?</h2>
+                    <h2 class="heading text-5xl font-bold mb-8">Let's Secure India's Skies</h2>
+                    <p class="text-neutral-400 text-lg mb-10">Ready to deploy ABHAI autonomous solutions?</p>
+                    
                     <div class="space-y-8">
                         <div class="flex gap-6">
-                            <i class="fa-solid fa-phone text-4xl text-orange-500"></i>
+                            <i class="fa-solid fa-phone text-4xl text-orange-500 mt-1"></i>
                             <div>
-                                <p class="font-medium">+91 76961 23457</p>
-                                <p class="text-sm text-neutral-500">24×7 Support</p>
+                                <p class="text-sm text-neutral-400">24×7 HELPLINE</p>
+                                <a href="tel:+917696123457" class="text-3xl font-semibold">+91 76961 23457</a>
                             </div>
                         </div>
                         <div class="flex gap-6">
-                            <i class="fa-solid fa-location-dot text-4xl text-orange-500"></i>
+                            <i class="fa-solid fa-location-dot text-4xl text-orange-500 mt-1"></i>
                             <div>
-                                <p>C9FW+C36, BN Reddy Colony,<br>Rai Durg, Hyderabad, Telangana 500110</p>
+                                <p class="text-sm text-neutral-400">HEAD OFFICE</p>
+                                <p class="text-xl">C9FW+C36, BN Reddy Colony,<br>Rai Durg, Hyderabad, Telangana 500110</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="bg-neutral-100 p-8 rounded-3xl">
-                    <form onsubmit="handleSubmit(event)">
-                        <input type="text" placeholder="Your Name" class="w-full mb-4 p-4 rounded-2xl border" required>
-                        <input type="tel" placeholder="Phone Number" class="w-full mb-4 p-4 rounded-2xl border" required>
-                        <textarea placeholder="Your Requirement (Forest, Industry, etc.)" rows="4" class="w-full p-4 rounded-3xl border" required></textarea>
-                        <button type="submit" class="mt-6 w-full bg-orange-500 text-white py-5 rounded-3xl font-semibold">SEND MESSAGE</button>
+
+                <div class="bg-neutral-800 p-10 rounded-3xl">
+                    <form onsubmit="handleSubmit(event)" class="space-y-6">
+                        <input type="text" placeholder="Your Full Name" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <input type="tel" placeholder="Phone Number" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <input type="email" placeholder="Email Address" class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <textarea placeholder="Tell us about your project (Forest / Industry / Smart City / Other)" rows="5" required class="w-full bg-neutral-700 border border-neutral-600 rounded-3xl px-6 py-5"></textarea>
+                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-6 rounded-3xl text-lg font-semibold">SEND MESSAGE TO ABHAI TEAM</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-8 text-center text-neutral-500 text-sm">
-        © 2026 ABHAI Technologies • Hyderabad • Indian Partner of Fire Eagle Paris
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 text-neutral-500 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-xl font-semibold text-white mb-2">ABHAI Technologies Pvt Ltd</p>
+            <p>Official Indian Partner of Fire Eagle Paris</p>
+            <p class="mt-6">© 2026 • Hyderabad, Telangana • +91 76961 23457</p>
+        </div>
     </footer>
 
     <script>
         function handleSubmit(e) {
             e.preventDefault();
-            alert("Thank you! ABHAI team will call you on +91 76961 23457 shortly.");
+            alert("✅ Thank you! The ABHAI team will contact you shortly on +91 76961 23457.");
             e.target.reset();
         }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>
