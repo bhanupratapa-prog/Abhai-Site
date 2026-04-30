@@ -3,36 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABHAI - Aerial AI</title>
+    <title>ABHAI - Aerial Based Hybrid Artificial Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .heading { font-family: 'Space Grotesk', sans-serif; }
+        .hero { 
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://picsum.photos/id/1015/2000/1200') center/cover; 
+            height: 100vh;
+        }
+    </style>
 </head>
-<body class="bg-black text-white">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="text-center px-6">
-            <h1 class="text-6xl font-bold mb-4">ABHAI</h1>
-            <p class="text-2xl text-orange-400 mb-8">Aerial Based Hybrid Artificial Intelligence</p>
-            <p class="text-xl mb-12">Official Indian Partner of Fire Eagle Paris</p>
-            
-            <div class="space-y-6 text-left max-w-md mx-auto">
-                <div class="flex items-center gap-4">
-                    <i class="fa-solid fa-phone text-3xl text-orange-500"></i>
-                    <div>
-                        <p class="text-sm text-gray-400">Call Us</p>
-                        <a href="tel:+917696123457" class="text-3xl font-semibold">+91 76961 23457</a>
+<body class="bg-neutral-950 text-white">
+
+    <!-- NAV -->
+    <nav class="sticky top-0 bg-neutral-950 border-b border-neutral-800 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center text-2xl">🦅</div>
+                <h1 class="heading text-3xl font-bold">ABHAI</h1>
+            </div>
+            <a href="#contact" class="bg-orange-500 px-6 py-3 rounded-2xl font-medium">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero flex items-center">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h1 class="heading text-6xl md:text-7xl font-bold leading-none mb-6">AERIAL BASED<br>HYBRID ARTIFICIAL INTELLIGENCE</h1>
+            <p class="text-2xl text-orange-400 mb-8">Official Indian Partner of Fire Eagle Paris</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#contact" class="bg-white text-black px-8 py-4 rounded-3xl font-semibold text-lg">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-20 bg-white text-neutral-900">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-5xl font-bold mb-8">Ready to Deploy ABHAI?</h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <i class="fa-solid fa-phone text-4xl text-orange-500"></i>
+                            <div>
+                                <p class="font-medium">+91 76961 23457</p>
+                                <p class="text-sm text-neutral-500">24×7 Support</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <i class="fa-solid fa-location-dot text-4xl text-orange-500"></i>
+                            <div>
+                                <p>C9FW+C36, BN Reddy Colony,<br>Rai Durg, Hyderabad, Telangana 500110</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <i class="fa-solid fa-location-dot text-3xl text-orange-500"></i>
-                    <div>
-                        <p class="text-sm text-gray-400">Hyderabad Office</p>
-                        <p>C9FW+C36, BN Reddy Colony,<br>Rai Durg, Hyderabad, Telangana 500110</p>
-                    </div>
+                
+                <div class="bg-neutral-100 p-8 rounded-3xl">
+                    <form onsubmit="handleSubmit(event)">
+                        <input type="text" placeholder="Your Name" class="w-full mb-4 p-4 rounded-2xl border" required>
+                        <input type="tel" placeholder="Phone Number" class="w-full mb-4 p-4 rounded-2xl border" required>
+                        <textarea placeholder="Your Requirement (Forest, Industry, etc.)" rows="4" class="w-full p-4 rounded-3xl border" required></textarea>
+                        <button type="submit" class="mt-6 w-full bg-orange-500 text-white py-5 rounded-3xl font-semibold">SEND MESSAGE</button>
+                    </form>
                 </div>
             </div>
-            
-            <p class="mt-16 text-sm text-gray-500">Website under construction • Coming soon on abhai.io</p>
         </div>
-    </div>
+    </section>
+
+    <footer class="py-8 text-center text-neutral-500 text-sm">
+        © 2026 ABHAI Technologies • Hyderabad • Indian Partner of Fire Eagle Paris
+    </footer>
+
+    <script>
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert("Thank you! ABHAI team will call you on +91 76961 23457 shortly.");
+            e.target.reset();
+        }
+    </script>
 </body>
 </html>
