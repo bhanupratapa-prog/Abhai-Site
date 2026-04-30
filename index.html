@@ -136,7 +136,7 @@
         </div>
     </section>
 
-    <!-- DEPLOYMENTS -->
+    <!-- DEPLOYMENTS (Real Fire Eagle only) -->
     <section id="deployments" class="py-24 bg-white text-neutral-900">
         <div class="max-w-7xl mx-auto px-6">
             <h2 class="heading text-5xl font-bold text-center mb-4">Proven Deployments</h2>
@@ -147,27 +147,27 @@
                     <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
                     <h3 class="text-2xl font-semibold mb-2">SDIS 11 – Aude Region</h3>
                     <p class="text-sm text-orange-600 mb-4">France • 2023–2024</p>
-                    <p class="text-neutral-600">Collaboration with French firefighters for real-time forest fire monitoring in Lézignan-Corbières. Successfully supported fire prevention during the 2024 season.</p>
+                    <p class="text-neutral-600">Collaboration with French firefighters for real-time forest fire monitoring in Lézignan-Corbières.</p>
                 </div>
 
                 <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
                     <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
                     <h3 class="text-2xl font-semibold mb-2">Powerline Infrastructure</h3>
                     <p class="text-sm text-orange-600 mb-4">France • Ongoing</p>
-                    <p class="text-neutral-600">Autonomous AI drones inspect power lines, detect faults, vegetation risks, and structural damage with high accuracy.</p>
+                    <p class="text-neutral-600">Autonomous AI drones inspect power lines, detect faults and risks.</p>
                 </div>
 
                 <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
                     <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
                     <h3 class="text-2xl font-semibold mb-2">Wildlife Protection</h3>
                     <p class="text-sm text-orange-600 mb-4">Multiple Regions • Ongoing</p>
-                    <p class="text-neutral-600">Autonomous drone systems used for anti-poaching, wildlife corridor monitoring, and environmental protection.</p>
+                    <p class="text-neutral-600">Autonomous drone systems for anti-poaching and wildlife corridor monitoring.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- CONTACT FORM (NOW FIXED) -->
     <section id="contact" class="py-24 bg-neutral-900">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-16">
@@ -194,23 +194,23 @@
                 </div>
 
                 <div class="bg-neutral-800 p-10 rounded-3xl">
-                    <form action="https://formspree.io/f/xbldvdyq" method="POST" id="contactForm" class="space-y-6">
-                        <input type="text" name="name" placeholder="Your Full Name" required 
-                               class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <input type="tel" name="phone" placeholder="Phone Number" required 
-                               class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <input type="email" name="email" placeholder="Email Address" 
-                               class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <textarea name="message" placeholder="Tell us about your project..." rows="5" required
-                                  class="w-full bg-neutral-700 border border-neutral-600 rounded-3xl px-6 py-5"></textarea>
+                    <form action="https://formsubmit.co/contact@abhai.io" method="POST" id="contactForm" class="space-y-6">
+                        <input type="text" name="name" placeholder="Your Full Name" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <input type="tel" name="phone" placeholder="Phone Number" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <input type="email" name="email" placeholder="Email Address" class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
+                        <textarea name="message" placeholder="Tell us about your project..." rows="5" required class="w-full bg-neutral-700 border border-neutral-600 rounded-3xl px-6 py-5"></textarea>
                         
-                        <button type="submit" 
-                                class="w-full bg-orange-500 hover:bg-orange-600 py-6 rounded-3xl text-lg font-semibold">
+                        <!-- Hidden fields for better emails -->
+                        <input type="hidden" name="_subject" value="New ABHAI Website Inquiry">
+                        <input type="hidden" name="_next" value="https://abhai.io">
+                        <input type="hidden" name="_captcha" value="false">
+                        
+                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-6 rounded-3xl text-lg font-semibold">
                             SEND MESSAGE TO ABHAI TEAM
                         </button>
                     </form>
                     <p class="text-center text-xs text-neutral-500 mt-6">
-                        Messages go directly to <span class="text-orange-400">contact@abhai.io</span>
+                        Messages will be sent directly to <span class="text-orange-400">contact@abhai.io</span>
                     </p>
                 </div>
             </div>
@@ -227,11 +227,11 @@
     </footer>
 
     <script>
-        // Form success message
+        // Success message after form submit
         document.getElementById('contactForm').addEventListener('submit', function() {
             setTimeout(() => {
                 alert("✅ Thank you! Your message has been sent to contact@abhai.io\n\nThe ABHAI team will contact you shortly.");
-            }, 800);
+            }, 600);
         });
 
         // Smooth scrolling
