@@ -473,21 +473,24 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
       <div class="c-info reveal">
         <p>Whether you're a forest department, a fire service, an industrial operator, or an investor who believes India's skies deserve fearless intelligence — we'd love to talk.</p>
         <div class="c-line"><span class="ic">◆</span><span><b>Email</b><br>namaste@abhai.io</span></div>
-        <div class="c-line"><span class="ic">◆</span><span><b>Headquarters</b><br>Hyderabad, Telangana, India</span></div>
+        <div class="c-line"><span class="ic">◆</span><span><b>Headquarters</b><br>Road Num 51, 5th Floor, BN Reddy Hills,<br>Rai Durg, Hyderabad — 500110, Telangana, India</span></div>
+        <div class="c-line"><span class="ic">◆</span><span><b>Phone</b><br><a href="tel:+917696123457" style="color:var(--ash)">+91 76961 23457</a></span></div>
         <div class="c-line"><span class="ic">◆</span><span><b>For government &amp; PSU procurement</b><br>Available for pilots and demonstrations across India</span></div>
       </div>
       <form id="cform" class="reveal" novalidate>
         <div class="frow">
-          <div><label for="fname">Full name*</label><input id="fname" required placeholder="Your name"></div>
-          <div><label for="forg">Organisation*</label><input id="forg" required placeholder="Department / Company"></div>
+          <div><label for="fname">Full name*</label><input id="fname" name="name" required placeholder="Your name"></div>
+          <div><label for="forg">Organisation*</label><input id="forg" name="organisation" required placeholder="Department / Company"></div>
         </div>
         <div class="frow">
-          <div><label for="femail">Email*</label><input id="femail" type="email" required placeholder="you@organisation.in"></div>
-          <div><label for="fphone">Phone*</label><input id="fphone" type="tel" required placeholder="+91"></div>
+          <div><label for="femail">Email*</label><input id="femail" name="email" type="email" required placeholder="you@organisation.in"></div>
+          <div><label for="fphone">Phone*</label><input id="fphone" name="phone" type="tel" required placeholder="+91"></div>
         </div>
-        <div><label for="fmsg">Your message*</label><textarea id="fmsg" required placeholder="Tell us about your region, requirement, or interest…"></textarea></div>
-        <div class="form-ok" id="formok">Dhanyavaad! Your message is ready to send — connect this form to your mail service or CRM to go live.</div>
-        <button class="btn btn-primary" type="submit" style="justify-self:start">Send message</button>
+        <div><label for="fmsg">Your message*</label><textarea id="fmsg" name="message" required placeholder="Tell us about your region, requirement, or interest…"></textarea></div>
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="form-ok" id="formok">Dhanyavaad! Your message has been sent. Our team will reach out to you shortly.</div>
+        <div class="form-ok" id="formerr" style="background:rgba(255,90,42,.12);border-color:rgba(255,90,42,.4);color:var(--ember)">Something went wrong while sending. Please try again, or write to us directly at namaste@abhai.io.</div>
+        <button class="btn btn-primary" id="sendbtn" type="submit" style="justify-self:start">Send message</button>
       </form>
     </div>
   </div>
@@ -496,7 +499,7 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
 <!-- MEGA FOOTER BANNER -->
 <div class="mega" data-sector="LANDING">
   <div class="mega-title">Fearless Skies</div>
-  <a class="mega-phone" href="tel:+919999900000">+91 99999 00000</a>
+  <a class="mega-phone" href="tel:+917696123457">+91 76961 23457</a>
   <a class="mega-mail" href="mailto:namaste@abhai.io">NAMASTE@ABHAI.IO</a>
 </div>
 
@@ -524,7 +527,7 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
       </div>
     </div>
     <div class="f-bottom">
-      <span>© 2026 Abhai Technologies · abhai.io · All rights reserved</span>
+      <span>© 2026 Abhai Technologies · Road Num 51, 5th Floor, BN Reddy Hills, Rai Durg, Hyderabad 500110 · abhai.io</span>
       <span class="f-tag">निर्भय आकाश — Fearless Skies</span>
     </div>
   </div>
@@ -545,12 +548,33 @@ const so=new IntersectionObserver(es=>{es.forEach(e=>{
 })},{threshold:.5});
 document.querySelectorAll('[data-count]').forEach(el=>so.observe(el));
 
-/* ---------- Contact form (demo) ---------- */
-document.getElementById('cform').addEventListener('submit',ev=>{
+/* ---------- Contact form (FormSubmit — sends to your inbox) ---------- */
+const FORM_EMAIL='namaste@abhai.io'; // ← change to your receiving email if different
+document.getElementById('cform').addEventListener('submit',async ev=>{
   ev.preventDefault();
   const f=ev.target;
   if(!f.checkValidity()){f.reportValidity();return}
-  document.getElementById('formok').style.display='block';
+  const btn=document.getElementById('sendbtn');
+  const ok=document.getElementById('formok'),err=document.getElementById('formerr');
+  ok.style.display=err.style.display='none';
+  btn.disabled=true;btn.textContent='Sending…';
+  try{
+    const data=Object.fromEntries(new FormData(f).entries());
+    data._subject='New enquiry from abhai.io — '+data.organisation;
+    data._template='table';
+    const res=await fetch('https://formsubmit.co/ajax/'+FORM_EMAIL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(data)
+    });
+    if(!res.ok)throw new Error('send failed');
+    ok.style.display='block';
+    f.reset();
+  }catch(e){
+    err.style.display='block';
+  }finally{
+    btn.disabled=false;btn.textContent='Send message';
+  }
 });
 
 /* ---------- SCROLL-DRIVEN DRONE FLIGHT ---------- */
