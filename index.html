@@ -1,246 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABHAI | Aerial Based Hybrid Artificial Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .heading { font-family: 'Space Grotesk', sans-serif; }
-        
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), 
-                        url('https://picsum.photos/id/1015/2000/1200') center/cover;
-            height: 100vh;
-        }
-        
-        .nav-link { position: relative; }
-        .nav-link:after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
-            background-color: #f97316; transition: all 0.3s;
-        }
-        .nav-link:hover:after { width: 100%; }
-        
-        .card-hover:hover { transform: translateY(-10px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABHAI — Aerial Based Hybrid AI | Fearless Skies for India</title>
+<meta name="description" content="Abhai builds autonomous AI drones that detect forest fires in under 5 minutes and alert responders before flames spread. Proven AI, engineered for Bharat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#05080F;
+  --panel:#0B1220;
+  --panel-2:#101A2E;
+  --line:rgba(255,255,255,.08);
+  --saffron:#FF8A1E;
+  --saffron-soft:rgba(255,138,30,.14);
+  --ember:#FF5A2A;
+  --leaf:#3AC08F;
+  --ash:#EDF1F7;
+  --muted:#8D98AB;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+  --disp:'Unbounded',sans-serif;
+  --dev:'Noto Sans Devanagari',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--ash);font-family:var(--sans);font-size:17px;line-height:1.65;overflow-x:hidden}
+::selection{background:var(--saffron);color:#160a00}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--saffron);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--saffron)}
+h1,h2,h3{font-family:var(--disp);font-weight:600;line-height:1.12}
+h2{font-size:clamp(26px,3.6vw,42px);margin:18px 0 16px}
+.sub{color:var(--muted);max-width:660px}
+section{padding:100px 0;position:relative;z-index:2}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  *{animation:none!important;transition:none!important}
+  #droneLayer{display:none!important}
+}
+
+/* ============ SCROLL DRONE ============ */
+#droneLayer{position:fixed;inset:0;z-index:5;pointer-events:none}
+#drone{position:absolute;width:110px;height:110px;left:0;top:0;will-change:transform;filter:drop-shadow(0 0 22px rgba(255,138,30,.35))}
+#drone svg{width:100%;height:100%;overflow:visible}
+.rotor{transform-origin:center;animation:rot .12s linear infinite}
+@keyframes rot{to{transform:rotate(180deg)}}
+.scanbeam{position:absolute;left:50%;top:88%;width:150px;height:190px;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,138,30,.30),rgba(255,138,30,0) 78%);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);opacity:.75;animation:beam 2.6s ease-in-out infinite}
+@keyframes beam{50%{opacity:.35}}
+.trail{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--saffron);opacity:.35;pointer-events:none}
+#hud{position:absolute;left:120%;top:12%;white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--saffron);background:rgba(5,8,15,.82);border:1px solid rgba(255,138,30,.35);border-radius:8px;padding:7px 11px;line-height:1.7}
+#hud .lv{color:var(--muted)}
+#hud .live{color:var(--leaf)}
+@media(max-width:900px){#drone{width:72px;height:72px}#hud{display:none}.scanbeam{width:100px;height:130px}}
+
+/* ============ NAV ============ */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,8,15,.74);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:.06em}
+.logo .mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(140deg,var(--saffron),var(--ember));display:grid;place-items:center;font-family:var(--dev);font-weight:700;font-size:20px;color:#180a00}
+.logo span.ai{color:var(--saffron)}
+.nav-links{display:flex;gap:30px;font-size:14.5px;color:var(--muted)}
+.nav-links a:hover{color:var(--ash)}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 24px;border-radius:999px;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;border:1px solid transparent;cursor:pointer;transition:.25s}
+.btn-primary{background:var(--saffron);color:#1c0d00;font-weight:500}
+.btn-primary:hover{background:#ffa04a;box-shadow:0 6px 30px rgba(255,138,30,.35)}
+.btn-ghost{border-color:rgba(255,255,255,.22);color:var(--ash)}
+.btn-ghost:hover{border-color:var(--saffron);color:var(--saffron)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ============ HERO (AI-ERA style giant type) ============ */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:150px 0 60px;position:relative;overflow:hidden}
+.hero::before{content:"अभय";position:absolute;font-family:var(--dev);font-weight:700;font-size:min(36vw,430px);color:transparent;-webkit-text-stroke:1px rgba(255,138,30,.09);right:-3%;bottom:-6%;pointer-events:none;user-select:none;line-height:1}
+.hero .eyebrow{justify-content:center}
+.hero-title{font-family:var(--disp);font-weight:900;font-size:clamp(44px,9.5vw,128px);line-height:.98;letter-spacing:-.01em;text-align:center;margin:26px 0 8px;text-transform:uppercase}
+.hero-title .l2{display:block;color:transparent;-webkit-text-stroke:1.5px var(--saffron)}
+.hero-sub{max-width:680px;margin:26px auto 0;text-align:center;color:var(--muted);font-size:18.5px}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:40px}
+.hero-note{margin:38px auto 0;font-family:var(--mono);font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:10px;justify-content:center}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--leaf);box-shadow:0 0 12px var(--leaf);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.scroll-cue{margin:60px auto 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.25em;color:var(--muted);animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(8px)}}
+
+/* ============ GIANT MARQUEE BANDS (STEP INTO FUTURE style) ============ */
+.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:26px 0;background:rgba(255,138,30,.03);position:relative;z-index:2}
+.band-track{display:flex;gap:70px;width:max-content;white-space:nowrap;animation:scroll 30s linear infinite;font-family:var(--disp);font-weight:800;font-size:clamp(30px,5vw,64px);text-transform:uppercase;line-height:1}
+.band-track span{color:transparent;-webkit-text-stroke:1px rgba(237,241,247,.35)}
+.band-track span.fill{color:var(--saffron);-webkit-text-stroke:0}
+.band-track span.dev{font-family:var(--dev);font-weight:700;color:rgba(237,241,247,.5);-webkit-text-stroke:0}
+.band.small .band-track{font-size:15px;font-weight:600;letter-spacing:.18em;color:var(--muted);gap:60px;animation-duration:24s}
+.band.small .band-track span{color:var(--muted);-webkit-text-stroke:0}
+.band.small .band-track span.fill{color:var(--saffron)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ============ STATS ============ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.stat{background:var(--panel);padding:36px 28px}
+.stat b{display:block;font-family:var(--disp);font-size:clamp(28px,3vw,38px);font-weight:800;color:var(--saffron)}
+.stat small{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}}
+
+/* ============ CARDS ============ */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:32px 28px;transition:.3s}
+.card:hover{border-color:rgba(255,138,30,.45);transform:translateY(-4px)}
+.card .ic{width:48px;height:48px;border-radius:12px;background:var(--saffron-soft);display:grid;place-items:center;font-size:22px;margin-bottom:20px}
+.card h3{font-size:16.5px;margin-bottom:10px}
+.card p{font-size:15px;color:var(--muted)}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+
+/* ============ PROVEN ============ */
+.proven{background:linear-gradient(180deg,var(--panel) 0%,var(--night) 100%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proven-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.proven-box{background:var(--panel-2);border:1px solid var(--line);border-radius:20px;padding:38px;position:relative}
+.proven-box::before{content:"FIELD-PROVEN";position:absolute;top:-11px;left:32px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--saffron);background:var(--night);padding:2px 12px;border:1px solid rgba(255,138,30,.4);border-radius:6px}
+.check{display:flex;gap:14px;margin:18px 0;font-size:15.5px;color:var(--ash)}
+.check::before{content:"◆";color:var(--saffron);font-size:12px;margin-top:5px}
+@media(max-width:920px){.proven-grid{grid-template-columns:1fr}}
+
+/* ============ SUITE (AI-ERA Innovation Suite style) ============ */
+.suite{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:52px}
+.suite-card{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);min-height:320px;padding:36px 32px;display:flex;flex-direction:column;justify-content:flex-end;transition:.35s;background:var(--panel)}
+.suite-card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 80% 0%,var(--grad) 0%,transparent 60%);opacity:.55;transition:.35s}
+.suite-card:hover{transform:translateY(-6px);border-color:rgba(255,138,30,.5)}
+.suite-card:hover::before{opacity:.85}
+.suite-card .big-ic{position:absolute;top:26px;right:28px;font-size:44px;opacity:.9}
+.suite-card .tagline{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--saffron);margin-bottom:12px}
+.suite-card h3{font-size:21px;margin-bottom:12px;position:relative}
+.suite-card p{font-size:15px;color:var(--muted);position:relative;margin-bottom:22px}
+.suite-card .go{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);display:inline-flex;align-items:center;gap:8px}
+.suite-card .go::after{content:"→";color:var(--saffron);transition:.25s}
+.suite-card:hover .go::after{transform:translateX(6px)}
+@media(max-width:820px){.suite{grid-template-columns:1fr}}
+
+/* ============ MISSION LOOP ============ */
+.loop{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;counter-reset:step}
+.step{padding:0 26px;border-left:1px solid var(--line);counter-increment:step}
+.step:first-child{border-left:none;padding-left:0}
+.step::before{content:"0" counter(step);font-family:var(--mono);font-size:13px;color:var(--saffron);letter-spacing:.15em}
+.step h3{font-size:16px;margin:14px 0 10px}
+.step p{font-size:14.5px;color:var(--muted)}
+@media(max-width:860px){.loop{grid-template-columns:1fr;gap:32px}.step{border-left:none;padding:0}}
+
+/* ============ SECTOR STRIP (client-logo style) ============ */
+.sector-strip{overflow:hidden;margin-top:52px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:34px 0}
+.sector-track{display:flex;gap:0;width:max-content;animation:scroll 32s linear infinite}
+.sector-item{font-family:var(--disp);font-size:19px;font-weight:600;color:var(--muted);padding:0 46px;border-right:1px solid var(--line);white-space:nowrap;display:flex;align-items:center;gap:14px}
+.sector-item span{font-size:24px}
+.sector-item:hover{color:var(--saffron)}
+
+/* ============ CRED BAND (Registered on / Aligned / Certified) ============ */
+.cred{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:52px}
+.cred-cell{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 26px;text-align:center}
+.cred-cell small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.cred-cell b{font-family:var(--disp);font-size:16px;font-weight:600;color:var(--ash)}
+.cred-cell p{font-size:13px;color:var(--muted);margin-top:8px}
+@media(max-width:920px){.cred{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.cred{grid-template-columns:1fr}}
+
+/* ============ BHARAT ============ */
+.bharat{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bharat-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.badges{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.badge{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;padding:10px 18px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--night)}
+.badge b{color:var(--saffron);font-weight:500}
+.tricolor{height:4px;width:120px;border-radius:4px;background:linear-gradient(90deg,#FF9933 33%,#fff 33% 66%,#138808 66%);margin-bottom:26px}
+@media(max-width:920px){.bharat-grid{grid-template-columns:1fr}}
+
+/* ============ CONTACT ============ */
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;margin-top:46px}
+.c-info p{color:var(--muted);margin-bottom:26px}
+.c-line{display:flex;gap:14px;align-items:flex-start;margin:18px 0;font-size:15.5px}
+.c-line .ic{color:var(--saffron)}
+form{display:grid;gap:16px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+input,textarea{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 18px;color:var(--ash);font-family:var(--sans);font-size:15px;width:100%;transition:.25s}
+input:focus,textarea:focus{outline:none;border-color:var(--saffron);box-shadow:0 0 0 3px rgba(255,138,30,.15)}
+textarea{min-height:130px;resize:vertical}
+label{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.form-ok{display:none;background:rgba(58,192,143,.12);border:1px solid rgba(58,192,143,.4);color:var(--leaf);padding:16px 20px;border-radius:12px;font-size:15px}
+@media(max-width:920px){.contact-grid{grid-template-columns:1fr}.frow{grid-template-columns:1fr}}
+
+/* ============ MEGA FOOTER (AI-ERA style) ============ */
+.mega{padding:90px 0 0;border-top:1px solid var(--line);overflow:hidden;position:relative;z-index:2}
+.mega-title{font-family:var(--disp);font-weight:900;font-size:clamp(40px,9vw,120px);text-transform:uppercase;line-height:1;text-align:center;color:transparent;-webkit-text-stroke:1.5px rgba(255,138,30,.6)}
+.mega-phone{display:block;text-align:center;font-family:var(--disp);font-weight:800;font-size:clamp(24px,4.5vw,44px);color:var(--ash);margin:44px 0 8px;transition:.25s}
+.mega-phone:hover{color:var(--saffron)}
+.mega-mail{display:block;text-align:center;font-family:var(--mono);font-size:15px;letter-spacing:.1em;color:var(--muted)}
+.mega-mail:hover{color:var(--saffron)}
+footer{padding:70px 0 36px;position:relative;z-index:2}
+.f-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.f-links{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+.f-links a:hover{color:var(--saffron)}
+.f-bottom{margin-top:44px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.f-tag{font-family:var(--dev);color:var(--saffron)}
+</style>
 </head>
-<body class="bg-neutral-950 text-white">
+<body>
 
-    <!-- NAVBAR -->
-    <nav class="sticky top-0 z-50 bg-neutral-950 border-b border-neutral-800">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">🦅</div>
-                <div>
-                    <h1 class="heading text-3xl font-bold tracking-tighter">ABHAI</h1>
-                    <p class="text-xs text-orange-400 -mt-1">AERIAL AI</p>
-                </div>
-            </div>
-            
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#solutions" class="nav-link">Solutions</a>
-                <a href="#technology" class="nav-link">Technology</a>
-                <a href="#deployments" class="nav-link">Deployments</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
-            
-            <a href="#contact" class="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
-                <i class="fa-solid fa-rocket"></i> Deploy Now
-            </a>
+<!-- SCROLL-DRIVEN DRONE -->
+<div id="droneLayer" aria-hidden="true">
+  <div id="drone">
+    <svg viewBox="0 0 120 120" fill="none">
+      <!-- arms -->
+      <line x1="30" y1="30" x2="52" y2="52" stroke="#8D98AB" stroke-width="4" stroke-linecap="round"/>
+      <line x1="90" y1="30" x2="68" y2="52" stroke="#8D98AB" stroke-width="4" stroke-linecap="round"/>
+      <line x1="30" y1="90" x2="52" y2="68" stroke="#8D98AB" stroke-width="4" stroke-linecap="round"/>
+      <line x1="90" y1="90" x2="68" y2="68" stroke="#8D98AB" stroke-width="4" stroke-linecap="round"/>
+      <!-- rotors -->
+      <g class="rotor" style="transform-box:fill-box"><circle cx="30" cy="30" r="16" stroke="rgba(255,138,30,.55)" stroke-width="2"/><line x1="14" y1="30" x2="46" y2="30" stroke="#EDF1F7" stroke-width="2.5" opacity=".85"/></g>
+      <g class="rotor" style="transform-box:fill-box;animation-delay:.03s"><circle cx="90" cy="30" r="16" stroke="rgba(255,138,30,.55)" stroke-width="2"/><line x1="74" y1="30" x2="106" y2="30" stroke="#EDF1F7" stroke-width="2.5" opacity=".85"/></g>
+      <g class="rotor" style="transform-box:fill-box;animation-delay:.06s"><circle cx="30" cy="90" r="16" stroke="rgba(255,138,30,.55)" stroke-width="2"/><line x1="14" y1="90" x2="46" y2="90" stroke="#EDF1F7" stroke-width="2.5" opacity=".85"/></g>
+      <g class="rotor" style="transform-box:fill-box;animation-delay:.09s"><circle cx="90" cy="90" r="16" stroke="rgba(255,138,30,.55)" stroke-width="2"/><line x1="74" y1="90" x2="106" y2="90" stroke="#EDF1F7" stroke-width="2.5" opacity=".85"/></g>
+      <!-- body -->
+      <rect x="46" y="46" width="28" height="28" rx="9" fill="#101A2E" stroke="#FF8A1E" stroke-width="2"/>
+      <circle cx="60" cy="60" r="5.5" fill="#FF8A1E">
+        <animate attributeName="opacity" values="1;.35;1" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+    <div class="scanbeam"></div>
+    <div id="hud">
+      <span class="lv">SECTOR</span> <span id="hudSector">LAUNCH PAD</span><br>
+      <span class="lv">ALT</span> <span id="hudAlt">000 M</span> · <span class="live">● LIVE</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="#top"><span class="mark">अ</span>ABH<span class="ai">AI</span></a>
+    <div class="nav-links">
+      <a href="#challenge">The Challenge</a>
+      <a href="#proven">Proven AI</a>
+      <a href="#suite">The Suite</a>
+      <a href="#sectors">Sectors</a>
+      <a href="#bharat">Bharat First</a>
+    </div>
+    <a class="btn btn-primary" href="#contact">Request a demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Aerial Based Hybrid AI · Bharat</div>
+    <h1 class="hero-title">Fearless<span class="l2">Skies</span></h1>
+    <p class="hero-sub">Abhai builds fully autonomous AI drones that patrol vast landscapes 24×7, detect a forest fire within minutes of ignition, and alert responders in real time — before a spark becomes a disaster.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#contact">Partner with us</a>
+      <a class="btn btn-ghost" href="#suite">Explore the system</a>
+    </div>
+    <div class="hero-note"><span class="dot"></span> OUR AI MODELS ARE OPERATIONAL & FIELD-DEPLOYED INTERNATIONALLY</div>
+    <div class="scroll-cue">SCROLL — THE DRONE FLIES WITH YOU ▼</div>
+  </div>
+</header>
+
+<!-- GIANT MARQUEE BAND -->
+<div class="band" aria-hidden="true">
+  <div class="band-track">
+    <span class="fill">Fearless Skies</span><span class="dev">निर्भय आकाश</span><span>Step Into Future</span><span class="fill">Made In India</span><span class="dev">अभय</span><span>Detect · Predict · Protect</span>
+    <span class="fill">Fearless Skies</span><span class="dev">निर्भय आकाश</span><span>Step Into Future</span><span class="fill">Made In India</span><span class="dev">अभय</span><span>Detect · Predict · Protect</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<section data-sector="TELEMETRY">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat"><b data-count="2" data-suffix=" km">2 km</b><small>Fire detection range</small></div>
+      <div class="stat"><b data-count="706" data-suffix=" ha">706 ha</b><small>Scanned with precision in 30 s</small></div>
+      <div class="stat"><b data-count="95" data-suffix="%+">95%+</b><small>AI fire-risk prediction accuracy</small></div>
+      <div class="stat"><b>&lt;5 min</b><small>Ignition to alert</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHALLENGE -->
+<section id="challenge" data-sector="THE CHALLENGE">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Challenge</div>
+    <h2 class="reveal">Every summer, India's forests burn faster than we can watch them.</h2>
+    <p class="sub reveal">From the pine slopes of Uttarakhand and Himachal to the sal forests of Odisha and the Eastern Ghats, lakhs of hectares are lost each fire season. Watchtowers see only fragments. Satellites report hours late. By the time smoke is visible from the ground, the window for early attack has already closed.</p>
+    <div class="cards3">
+      <div class="card reveal">
+        <div class="ic">🔥</div>
+        <h3>Detect in under 5 minutes</h3>
+        <p>The first minutes decide everything. Abhai's AI identifies fire and smoke signatures the moment they appear — long before human eyes can.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">⚡</div>
+        <h3>Respond while it's still small</h3>
+        <p>Enable initial attack within 10 minutes, while the fire is under one hectare — the difference between a routine callout and a week-long disaster.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic">🌐</div>
+        <h3>Watch everything, always</h3>
+        <p>Continuous 24×7 surveillance of vast forest divisions — through night, haze, and terrain no watchtower or patrol jeep can cover.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROVEN -->
+<section class="proven" id="proven" data-sector="PROVEN AI">
+  <div class="wrap proven-grid">
+    <div>
+      <div class="eyebrow reveal">Proven, Not Promised</div>
+      <h2 class="reveal">The intelligence inside Abhai is already flying.</h2>
+      <p class="sub reveal">This is not a lab experiment. The AI models at the heart of Abhai are field-deployed overseas, operating live with professional fire and emergency services in Europe — patrolling real forests, detecting real fires, and triggering real responses, season after season.</p>
+      <p class="sub reveal" style="margin-top:16px">Abhai holds the exclusive rights to bring this proven technology home — re-engineered for Indian terrain, Indian weather, and Indian forest departments.</p>
+    </div>
+    <div class="proven-box reveal">
+      <div class="check">Operational with professional firefighting services internationally</div>
+      <div class="check">Fully autonomous missions — takeoff to landing, no pilot needed</div>
+      <div class="check">Fires detected from 2 km away by onboard hybrid AI</div>
+      <div class="check">Featured on national television for live field performance</div>
+      <div class="check">Now being localised, built, and scaled for India</div>
+    </div>
+  </div>
+</section>
+
+<!-- SUITE -->
+<section id="suite" data-sector="THE ABHAI SUITE">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Abhai Suite</div>
+    <h2 class="reveal">One platform. Four layers of fearlessness.</h2>
+    <p class="sub reveal">Abhai is a complete aerial intelligence system — hardware, AI, and command infrastructure working as one, with zero human intervention required in the field.</p>
+    <div class="suite">
+      <a class="suite-card reveal" href="#contact" style="--grad:rgba(255,138,30,.35)">
+        <div class="big-ic">🛸</div>
+        <div class="tagline">Autonomous flight</div>
+        <h3>Sentinel Drones</h3>
+        <p>Fully autonomous from takeoff to landing. 24×7 patrols across entire forest divisions, with swarm flight that lets multiple drones coordinate as one.</p>
+        <span class="go">Get started</span>
+      </a>
+      <a class="suite-card reveal" href="#contact" style="--grad:rgba(255,90,42,.35)">
+        <div class="big-ic">🧠</div>
+        <div class="tagline">Hybrid AI vision</div>
+        <h3>Fire Intelligence</h3>
+        <p>Onboard AI detects fire and smoke signatures in real time and predicts high-risk zones before ignition — decoding every landscape as it flies.</p>
+        <span class="go">Get started</span>
+      </a>
+      <a class="suite-card reveal" href="#contact" style="--grad:rgba(58,192,143,.3)">
+        <div class="big-ic">🗼</div>
+        <div class="tagline">Mission control</div>
+        <h3>Command Centre</h3>
+        <p>Plan, monitor, and command missions from anywhere in India. Remote flight-path planning and automated alert response across multiple sites.</p>
+        <span class="go">Get started</span>
+      </a>
+      <a class="suite-card reveal" href="#contact" style="--grad:rgba(141,152,171,.3)">
+        <div class="big-ic">🔋</div>
+        <div class="tagline">Zero-touch ops</div>
+        <h3>Auto-Dock Stations</h3>
+        <p>Drones land, recharge, and relaunch entirely on their own. No field personnel required — the fleet stays mission-ready, day and night.</p>
+        <span class="go">Get started</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION LOOP -->
+<section style="padding-top:20px" data-sector="MISSION LOOP">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Mission Loop</div>
+    <h2 class="reveal">From patrol to alert, without a single human in the loop.</h2>
+    <div class="loop">
+      <div class="step reveal">
+        <h3>Plan</h3>
+        <p>Missions are planned remotely from the command centre — coverage zones, patrol schedules, and risk priorities.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Patrol</h3>
+        <p>Drones fly continuous autonomous sorties, scanning hundreds of thousands of hectares round the clock.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Detect &amp; Predict</h3>
+        <p>Onboard AI spots fire and smoke in real time and forecasts zones where ignition is most likely next.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Alert</h3>
+        <p>Forest departments and fire services receive instant, geo-tagged alerts — enabling attack while the fire is still small.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORS (scrolling strip like AI-ERA client logos) -->
+<section id="sectors" style="padding-top:20px" data-sector="WHO WE SERVE">
+  <div class="wrap">
+    <div class="eyebrow reveal">Who We Serve</div>
+    <h2 class="reveal">Built for the guardians of India's land and skies.</h2>
+  </div>
+  <div class="sector-strip" aria-label="Sectors we serve">
+    <div class="sector-track">
+      <div class="sector-item"><span>🌲</span>Forest Departments</div>
+      <div class="sector-item"><span>🚒</span>Fire &amp; Emergency Services</div>
+      <div class="sector-item"><span>🛡️</span>Disaster Response Forces</div>
+      <div class="sector-item"><span>🏭</span>Industry &amp; Infrastructure</div>
+      <div class="sector-item"><span>🏙️</span>Smart Cities</div>
+      <div class="sector-item"><span>🌾</span>Agriculture &amp; Plantations</div>
+      <div class="sector-item"><span>🌲</span>Forest Departments</div>
+      <div class="sector-item"><span>🚒</span>Fire &amp; Emergency Services</div>
+      <div class="sector-item"><span>🛡️</span>Disaster Response Forces</div>
+      <div class="sector-item"><span>🏭</span>Industry &amp; Infrastructure</div>
+      <div class="sector-item"><span>🏙️</span>Smart Cities</div>
+      <div class="sector-item"><span>🌾</span>Agriculture &amp; Plantations</div>
+    </div>
+  </div>
+  <!-- Credibility band -->
+  <div class="wrap">
+    <div class="cred">
+      <div class="cred-cell reveal">
+        <small>Registered on</small>
+        <b>GeM</b>
+        <p>Government e-Marketplace ready for public procurement</p>
+      </div>
+      <div class="cred-cell reveal">
+        <small>Aligned with</small>
+        <b>UN SDG 13 &amp; 15</b>
+        <p>Climate action &amp; life on land, alongside Digital India</p>
+      </div>
+      <div class="cred-cell reveal">
+        <small>Compliant with</small>
+        <b>DGCA Norms</b>
+        <p>Engineered to India's drone rules and airspace framework</p>
+      </div>
+      <div class="cred-cell reveal">
+        <small>Proven in</small>
+        <b>Europe</b>
+        <p>AI models live with professional fire services abroad</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BHARAT -->
+<section class="bharat" id="bharat" data-sector="BHARAT FIRST">
+  <div class="wrap bharat-grid">
+    <div>
+      <div class="tricolor reveal"></div>
+      <div class="eyebrow reveal">Bharat First</div>
+      <h2 class="reveal">Global intelligence. Indian at heart.</h2>
+      <p class="sub reveal">Abhai — अभय, "the fearless" — is being built in India, for India. Our drones will be assembled here, our AI trained on Indian forests and Indian conditions, and every byte of operational data kept on Indian soil. We're proud to build in step with the nation's vision of an Atmanirbhar, technology-led Bharat.</p>
+      <div class="badges">
+        <div class="badge reveal"><b>◆</b> Make in India</div>
+        <div class="badge reveal"><b>◆</b> GeM-ready procurement</div>
+        <div class="badge reveal"><b>◆</b> Data residency in India</div>
+        <div class="badge reveal"><b>◆</b> Aligned with Digital India</div>
+      </div>
+    </div>
+    <div class="proven-box reveal" style="text-align:center;padding:56px 38px">
+      <div style="font-family:var(--dev);font-size:96px;font-weight:700;color:var(--saffron);line-height:1">अभय</div>
+      <p style="font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--muted);margin-top:18px">A·BHAI — WITHOUT FEAR</p>
+      <p style="font-size:15px;color:var(--muted);margin-top:14px">The name is a promise: forests that need not fear the fire season, and responders who need not fear the unknown.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" data-sector="GET IN TOUCH">
+  <div class="wrap">
+    <div class="eyebrow reveal">Get In Touch</div>
+    <h2 class="reveal">Let's protect your forests, together.</h2>
+    <div class="contact-grid">
+      <div class="c-info reveal">
+        <p>Whether you're a forest department, a fire service, an industrial operator, or an investor who believes India's skies deserve fearless intelligence — we'd love to talk.</p>
+        <div class="c-line"><span class="ic">◆</span><span><b>Email</b><br>namaste@abhai.io</span></div>
+        <div class="c-line"><span class="ic">◆</span><span><b>Headquarters</b><br>Hyderabad, Telangana, India</span></div>
+        <div class="c-line"><span class="ic">◆</span><span><b>For government &amp; PSU procurement</b><br>Available for pilots and demonstrations across India</span></div>
+      </div>
+      <form id="cform" class="reveal" novalidate>
+        <div class="frow">
+          <div><label for="fname">Full name*</label><input id="fname" required placeholder="Your name"></div>
+          <div><label for="forg">Organisation*</label><input id="forg" required placeholder="Department / Company"></div>
         </div>
-    </nav>
-
-    <!-- HERO -->
-    <section id="home" class="hero flex items-center">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <span class="inline-block px-6 py-2 bg-orange-500/10 border border-orange-500/30 rounded-full text-orange-400 text-sm mb-6">
-                Official Indian Partner of Fire Eagle • Paris
-            </span>
-            <h1 class="heading text-6xl md:text-7xl font-bold leading-none tracking-tighter mb-6">
-                AERIAL BASED<br>HYBRID ARTIFICIAL<br>INTELLIGENCE
-            </h1>
-            <p class="text-2xl text-neutral-300 max-w-2xl mx-auto mb-10">
-                Advanced autonomous drone systems with real-time Edge AI for India
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#contact" class="bg-white text-black px-10 py-5 rounded-3xl font-semibold text-lg hover:bg-orange-500 hover:text-white transition">Get Started</a>
-                <a href="#deployments" class="border border-white px-10 py-5 rounded-3xl font-semibold text-lg hover:bg-white/10 transition">See Deployments</a>
-            </div>
+        <div class="frow">
+          <div><label for="femail">Email*</label><input id="femail" type="email" required placeholder="you@organisation.in"></div>
+          <div><label for="fphone">Phone*</label><input id="fphone" type="tel" required placeholder="+91"></div>
         </div>
-    </section>
+        <div><label for="fmsg">Your message*</label><textarea id="fmsg" required placeholder="Tell us about your region, requirement, or interest…"></textarea></div>
+        <div class="form-ok" id="formok">Dhanyavaad! Your message is ready to send — connect this form to your mail service or CRM to go live.</div>
+        <button class="btn btn-primary" type="submit" style="justify-self:start">Send message</button>
+      </form>
+    </div>
+  </div>
+</section>
 
-    <!-- SOLUTIONS -->
-    <section id="solutions" class="py-24 bg-white text-neutral-900">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="heading text-5xl font-bold text-center mb-4">Our Solutions</h2>
-            <p class="text-center text-xl text-neutral-600 mb-16">Built on Fire Eagle technology, tuned for Indian conditions</p>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="text-6xl mb-6">🔥</div>
-                    <h3 class="text-2xl font-semibold mb-3">Forest Fire Detection</h3>
-                    <p class="text-neutral-600">Early smoke &amp; fire detection. Alerts in under 5 minutes.</p>
-                </div>
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="text-6xl mb-6">🏭</div>
-                    <h3 class="text-2xl font-semibold mb-3">Industrial Security</h3>
-                    <p class="text-neutral-600">24/7 perimeter monitoring and infrastructure protection.</p>
-                </div>
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="text-6xl mb-6">🌾</div>
-                    <h3 class="text-2xl font-semibold mb-3">Agriculture &amp; Disaster Response</h3>
-                    <p class="text-neutral-600">Crop monitoring, flood mapping &amp; rapid response.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- MEGA FOOTER BANNER -->
+<div class="mega" data-sector="LANDING">
+  <div class="mega-title">Fearless Skies</div>
+  <a class="mega-phone" href="tel:+919999900000">+91 99999 00000</a>
+  <a class="mega-mail" href="mailto:namaste@abhai.io">NAMASTE@ABHAI.IO</a>
+</div>
 
-    <!-- TECHNOLOGY -->
-    <section id="technology" class="py-24">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="heading text-5xl font-bold text-center mb-16">Powered by Fire Eagle DNA</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
-                    <div class="flex gap-6">
-                        <div class="text-5xl font-bold text-orange-500">01</div>
-                        <div>
-                            <h4 class="text-2xl font-semibold">Edge AI Processing</h4>
-                            <p class="text-neutral-400">On-drone intelligence – works offline in remote areas.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-6">
-                        <div class="text-5xl font-bold text-orange-500">02</div>
-                        <div>
-                            <h4 class="text-2xl font-semibold">Autonomous Swarms</h4>
-                            <p class="text-neutral-400">Multiple drones working together with computer vision.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-6">
-                        <div class="text-5xl font-bold text-orange-500">03</div>
-                        <div>
-                            <h4 class="text-2xl font-semibold">Hybrid Intelligence</h4>
-                            <p class="text-neutral-400">French Fire Eagle core + localized AI models.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-neutral-900 p-12 rounded-3xl text-center">
-                    <i class="fa-solid fa-drone text-8xl text-orange-400 mb-8"></i>
-                    <p class="text-3xl font-medium">Real-time AI Inference</p>
-                    <p class="text-neutral-400 mt-4">4K video • 60fps • Zero latency</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- small marquee -->
+<div class="band small" aria-hidden="true" style="margin-top:70px">
+  <div class="band-track">
+    <span class="fill">ABHAI</span><span>AERIAL BASED HYBRID AI</span><span class="fill">निर्भय आकाश</span><span>MADE IN INDIA</span><span class="fill">DETECT IN &lt;5 MIN</span><span>AUTONOMOUS 24×7</span>
+    <span class="fill">ABHAI</span><span>AERIAL BASED HYBRID AI</span><span class="fill">निर्भय आकाश</span><span>MADE IN INDIA</span><span class="fill">DETECT IN &lt;5 MIN</span><span>AUTONOMOUS 24×7</span>
+  </div>
+</div>
 
-    <!-- DEPLOYMENTS (Real Fire Eagle only) -->
-    <section id="deployments" class="py-24 bg-white text-neutral-900">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="heading text-5xl font-bold text-center mb-4">Proven Deployments</h2>
-            <p class="text-center text-xl text-neutral-600 mb-16">Fire Eagle technology successfully deployed in Europe</p>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
-                    <h3 class="text-2xl font-semibold mb-2">SDIS 11 – Aude Region</h3>
-                    <p class="text-sm text-orange-600 mb-4">France • 2023–2024</p>
-                    <p class="text-neutral-600">Collaboration with French firefighters for real-time forest fire monitoring in Lézignan-Corbières.</p>
-                </div>
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <a class="logo" href="#top"><span class="mark">अ</span>ABH<span class="ai">AI</span></a>
+        <p style="color:var(--muted);font-size:14px;margin-top:14px;max-width:320px">Aerial Based Hybrid AI. Autonomous drones and proven artificial intelligence, protecting India's forests, cities, and skies.</p>
+      </div>
+      <div class="f-links">
+        <a href="#challenge">Challenge</a>
+        <a href="#proven">Proven AI</a>
+        <a href="#suite">Suite</a>
+        <a href="#sectors">Sectors</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© 2026 Abhai Technologies · abhai.io · All rights reserved</span>
+      <span class="f-tag">निर्भय आकाश — Fearless Skies</span>
+    </div>
+  </div>
+</footer>
 
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
-                    <h3 class="text-2xl font-semibold mb-2">Powerline Infrastructure</h3>
-                    <p class="text-sm text-orange-600 mb-4">France • Ongoing</p>
-                    <p class="text-neutral-600">Autonomous AI drones inspect power lines, detect faults and risks.</p>
-                </div>
+<script>
+/* ---------- Scroll reveal ---------- */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-                <div class="bg-neutral-100 p-8 rounded-3xl card-hover transition">
-                    <div class="h-2 bg-orange-500 w-16 rounded mb-6"></div>
-                    <h3 class="text-2xl font-semibold mb-2">Wildlife Protection</h3>
-                    <p class="text-sm text-orange-600 mb-4">Multiple Regions • Ongoing</p>
-                    <p class="text-neutral-600">Autonomous drone systems for anti-poaching and wildlife corridor monitoring.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+/* ---------- Animated counters ---------- */
+const so=new IntersectionObserver(es=>{es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  const el=e.target,target=+el.dataset.count,suffix=el.dataset.suffix||'';
+  const t0=performance.now(),dur=1400;
+  function tick(t){const p=Math.min((t-t0)/dur,1),v=Math.round(target*(1-Math.pow(1-p,3)));el.textContent=v+suffix;if(p<1)requestAnimationFrame(tick)}
+  requestAnimationFrame(tick);so.unobserve(el);
+})},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>so.observe(el));
 
-    <!-- CONTACT FORM (NOW FIXED) -->
-    <section id="contact" class="py-24 bg-neutral-900">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-16">
-                <div>
-                    <h2 class="heading text-5xl font-bold mb-8">Let's Secure India's Skies</h2>
-                    <p class="text-neutral-400 text-lg mb-10">Ready to bring proven Fire Eagle technology to India?</p>
-                    
-                    <div class="space-y-8">
-                        <div class="flex gap-6">
-                            <i class="fa-solid fa-phone text-4xl text-orange-500 mt-1"></i>
-                            <div>
-                                <p class="text-sm text-neutral-400">24×7 HELPLINE</p>
-                                <a href="tel:+917696123457" class="text-3xl font-semibold">+91 76961 23457</a>
-                            </div>
-                        </div>
-                        <div class="flex gap-6">
-                            <i class="fa-solid fa-location-dot text-4xl text-orange-500 mt-1"></i>
-                            <div>
-                                <p class="text-sm text-neutral-400">HEAD OFFICE</p>
-                                <p class="text-xl">C9FW+C36, BN Reddy Colony,<br>Rai Durg, Hyderabad, Telangana 500110</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+/* ---------- Contact form (demo) ---------- */
+document.getElementById('cform').addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const f=ev.target;
+  if(!f.checkValidity()){f.reportValidity();return}
+  document.getElementById('formok').style.display='block';
+});
 
-                <div class="bg-neutral-800 p-10 rounded-3xl">
-                    <form action="https://formsubmit.co/contact@abhai.io" method="POST" id="contactForm" class="space-y-6">
-                        <input type="text" name="name" placeholder="Your Full Name" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <input type="tel" name="phone" placeholder="Phone Number" required class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <input type="email" name="email" placeholder="Email Address" class="w-full bg-neutral-700 border border-neutral-600 rounded-2xl px-6 py-5">
-                        <textarea name="message" placeholder="Tell us about your project..." rows="5" required class="w-full bg-neutral-700 border border-neutral-600 rounded-3xl px-6 py-5"></textarea>
-                        
-                        <!-- Hidden fields for better emails -->
-                        <input type="hidden" name="_subject" value="New ABHAI Website Inquiry">
-                        <input type="hidden" name="_next" value="https://abhai.io">
-                        <input type="hidden" name="_captcha" value="false">
-                        
-                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-6 rounded-3xl text-lg font-semibold">
-                            SEND MESSAGE TO ABHAI TEAM
-                        </button>
-                    </form>
-                    <p class="text-center text-xs text-neutral-500 mt-6">
-                        Messages will be sent directly to <span class="text-orange-400">contact@abhai.io</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+/* ---------- SCROLL-DRIVEN DRONE FLIGHT ---------- */
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce)return;
+  const drone=document.getElementById('drone');
+  const hudSector=document.getElementById('hudSector');
+  const hudAlt=document.getElementById('hudAlt');
+  const layer=document.getElementById('droneLayer');
+  const sections=[...document.querySelectorAll('[data-sector]')];
 
-    <!-- FOOTER -->
-    <footer class="bg-black py-12 text-neutral-500 text-center">
-        <div class="max-w-7xl mx-auto px-6">
-            <p class="text-xl font-semibold text-white mb-2">ABHAI Technologies Pvt Ltd</p>
-            <p>Official Indian Partner of Fire Eagle Paris</p>
-            <p class="mt-6">© 2026 • Hyderabad, Telangana • +91 76961 23457</p>
-        </div>
-    </footer>
+  // trailing exhaust dots
+  const TRAILN=6,trails=[];
+  for(let i=0;i<TRAILN;i++){
+    const d=document.createElement('div');
+    d.className='trail';
+    layer.appendChild(d);
+    trails.push({el:d,x:0,y:0});
+  }
 
-    <script>
-        // Success message after form submit
-        document.getElementById('contactForm').addEventListener('submit', function() {
-            setTimeout(() => {
-                alert("✅ Thank you! Your message has been sent to contact@abhai.io\n\nThe ABHAI team will contact you shortly.");
-            }, 600);
-        });
+  let curX=innerWidth*.5,curY=innerHeight*.4,curTilt=0,lastX=curX;
 
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-    </script>
+  function targetPos(){
+    const doc=document.documentElement;
+    const max=doc.scrollHeight-innerHeight;
+    const p=max>0?Math.min(scrollY/max,1):0;
+    const w=innerWidth,h=innerHeight,small=w<900;
+    // Weave left–right down the page as the user scrolls
+    const amp=small?w*.28:w*.32;
+    const x=w*.5+amp*Math.sin(p*Math.PI*3.4);
+    // Descend gently through the viewport across the journey, hover-bob on top
+    const y=h*(.24+.42*p)+Math.sin(performance.now()/650)*9;
+    return{x,y,p};
+  }
+
+  function nearestSector(){
+    const mid=innerHeight*.5;
+    let best=null,bd=1e9;
+    for(const s of sections){
+      const r=s.getBoundingClientRect();
+      const d=Math.abs((r.top+r.bottom)/2-mid);
+      if(r.top<innerHeight&&r.bottom>0&&d<bd){bd=d;best=s}
+    }
+    return best?best.dataset.sector:'IN TRANSIT';
+  }
+
+  let frame=0;
+  function animate(){
+    const{x,y,p}=targetPos();
+    // smooth-follow easing
+    curX+=(x-curX)*.075;
+    curY+=(y-curY)*.075;
+    const vx=curX-lastX;lastX=curX;
+    const tilt=Math.max(-16,Math.min(16,vx*1.6));
+    curTilt+=(tilt-curTilt)*.12;
+    const s=innerWidth<900?.66:1;
+    drone.style.transform=`translate(${curX-55}px,${curY-55}px) rotate(${curTilt}deg) scale(${s})`;
+
+    // trail update (staggered)
+    if(frame%4===0){
+      for(let i=TRAILN-1;i>0;i--){trails[i].x=trails[i-1].x;trails[i].y=trails[i-1].y}
+      trails[0].x=curX;trails[0].y=curY+14;
+    }
+    trails.forEach((t,i)=>{
+      t.el.style.transform=`translate(${t.x}px,${t.y}px) scale(${1-i/TRAILN})`;
+      t.el.style.opacity=(0.32*(1-i/TRAILN)).toFixed(2);
+    });
+
+    // HUD
+    if(frame%12===0){
+      hudSector.textContent=nearestSector();
+      hudAlt.textContent=String(Math.round(60+p*340)).padStart(3,'0')+' M';
+    }
+    frame++;
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+</script>
 </body>
 </html>
