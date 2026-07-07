@@ -46,18 +46,23 @@ section{padding:100px 0;position:relative;z-index:2}
 }
 
 /* ============ SCROLL DRONE ============ */
-#droneLayer{position:fixed;inset:0;z-index:5;pointer-events:none}
-#drone{position:absolute;width:110px;height:110px;left:0;top:0;will-change:transform;filter:drop-shadow(0 0 22px rgba(255,138,30,.35))}
+#droneLayer{position:fixed;inset:0;z-index:5;pointer-events:none;--lx:50vw;--ly:55vh;--lrx:520px;--lry:36vh}
+#lightVeil{position:absolute;inset:0;background:rgba(2,4,9,.87);
+  -webkit-mask-image:radial-gradient(ellipse var(--lrx) var(--lry) at var(--lx) var(--ly),transparent 0%,transparent 42%,rgba(0,0,0,.5) 70%,#000 94%);
+  mask-image:radial-gradient(ellipse var(--lrx) var(--lry) at var(--lx) var(--ly),transparent 0%,transparent 42%,rgba(0,0,0,.5) 70%,#000 94%)}
+#lightGlow{position:absolute;inset:0;background:radial-gradient(ellipse calc(var(--lrx)*.85) calc(var(--lry)*.85) at var(--lx) var(--ly),rgba(255,180,95,.10),transparent 65%)}
+#beam{position:absolute;background:linear-gradient(180deg,rgba(255,190,110,.32),rgba(255,180,95,.02) 88%);clip-path:polygon(calc(50% - 9px) 0,calc(50% + 9px) 0,100% 100%,0 100%);filter:blur(2px)}
+#drone{position:absolute;width:110px;height:110px;left:0;top:0;will-change:transform;filter:drop-shadow(0 0 24px rgba(255,138,30,.4));transition:opacity .5s}
 #drone svg{width:100%;height:100%;overflow:visible}
 .rotor{transform-origin:center;animation:rot .12s linear infinite}
 @keyframes rot{to{transform:rotate(180deg)}}
-.scanbeam{position:absolute;left:50%;top:88%;width:150px;height:190px;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,138,30,.30),rgba(255,138,30,0) 78%);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);opacity:.75;animation:beam 2.6s ease-in-out infinite}
-@keyframes beam{50%{opacity:.35}}
+footer .logo .ldr{opacity:0;transition:opacity .7s ease}
+footer .logo .ldr.landed{opacity:1}
 .trail{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--saffron);opacity:.35;pointer-events:none}
 #hud{position:absolute;left:120%;top:12%;white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--saffron);background:rgba(5,8,15,.82);border:1px solid rgba(255,138,30,.35);border-radius:8px;padding:7px 11px;line-height:1.7}
 #hud .lv{color:var(--muted)}
 #hud .live{color:var(--leaf)}
-@media(max-width:900px){#drone{width:72px;height:72px}#hud{display:none}.scanbeam{width:100px;height:130px}}
+@media(max-width:900px){#hud{display:none}}
 
 /* ============ NAV ============ */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,8,15,.74);border-bottom:1px solid var(--line)}
@@ -383,6 +388,9 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
 
 <!-- SCROLL-DRIVEN DRONE -->
 <div id="droneLayer" aria-hidden="true">
+  <div id="lightVeil"></div>
+  <div id="lightGlow"></div>
+  <div id="beam"></div>
   <div id="drone">
     <svg viewBox="0 0 120 120" fill="none">
       <!-- arms -->
@@ -401,7 +409,6 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
         <animate attributeName="opacity" values="1;.35;1" dur="1.8s" repeatCount="indefinite"/>
       </circle>
     </svg>
-    <div class="scanbeam"></div>
     <div id="hud">
       <span class="lv">SECTOR</span> <span id="hudSector">LAUNCH PAD</span><br>
       <span class="lv">ALT</span> <span id="hudAlt">000 M</span> · <span class="live">● LIVE</span>
@@ -434,7 +441,7 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
       <a class="btn btn-ghost" href="#suite">Explore the system</a>
     </div>
     <div class="hero-note"><span class="dot"></span> OUR AI MODELS ARE OPERATIONAL & FIELD-DEPLOYED INTERNATIONALLY</div>
-    <div class="scroll-cue">SCROLL — THE DRONE FLIES WITH YOU ▼</div>
+    <div class="scroll-cue">SCROLL — THE DRONE LIGHTS THE WAY ▼</div>
   </div>
 </header>
 
@@ -868,18 +875,25 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
   }
 });
 
-/* ---------- SCROLL-DRIVEN DRONE FLIGHT ---------- */
+/* ---------- THE DRONE TELLS THE STORY ----------
+   Flight: the drone hovers above and its searchlight reveals each section.
+   Landing: at journey's end it descends onto the footer logo and docks
+   as the logo's own drone, while the veil lifts. */
 (function(){
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce)return;
+  const layer=document.getElementById('droneLayer');
   const drone=document.getElementById('drone');
+  const veil=document.getElementById('lightVeil');
+  const glow=document.getElementById('lightGlow');
+  const beam=document.getElementById('beam');
+  const hud=document.getElementById('hud');
   const hudSector=document.getElementById('hudSector');
   const hudAlt=document.getElementById('hudAlt');
-  const layer=document.getElementById('droneLayer');
+  const dock=document.querySelector('footer .logo .ldr');
   const sections=[...document.querySelectorAll('[data-sector]')];
 
-  // trailing exhaust dots
-  const TRAILN=6,trails=[];
+  const TRAILN=4,trails=[];
   for(let i=0;i<TRAILN;i++){
     const d=document.createElement('div');
     d.className='trail';
@@ -887,21 +901,12 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
     trails.push({el:d,x:0,y:0});
   }
 
-  let curX=innerWidth*.5,curY=innerHeight*.4,curTilt=0,lastX=curX;
+  let curX=innerWidth/2,curY=innerHeight*.16,curTilt=0,lastX=curX,landed=false;
 
-  function targetPos(){
-    const doc=document.documentElement;
-    const max=doc.scrollHeight-innerHeight;
-    const p=max>0?Math.min(scrollY/max,1):0;
-    const w=innerWidth,h=innerHeight,small=w<900;
-    // Weave left–right down the page as the user scrolls
-    const amp=small?w*.28:w*.32;
-    const x=w*.5+amp*Math.sin(p*Math.PI*3.4);
-    // Descend gently through the viewport across the journey, hover-bob on top
-    const y=h*(.24+.42*p)+Math.sin(performance.now()/650)*9;
-    return{x,y,p};
+  function scrollP(){
+    const m=document.documentElement.scrollHeight-innerHeight;
+    return m>0?Math.min(scrollY/m,1):0;
   }
-
   function nearestSector(){
     const mid=innerHeight*.5;
     let best=null,bd=1e9;
@@ -915,30 +920,72 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
 
   let frame=0;
   function animate(){
-    const{x,y,p}=targetPos();
-    // smooth-follow easing
-    curX+=(x-curX)*.075;
-    curY+=(y-curY)*.075;
-    const vx=curX-lastX;lastX=curX;
-    const tilt=Math.max(-16,Math.min(16,vx*1.6));
-    curTilt+=(tilt-curTilt)*.12;
-    const s=innerWidth<900?.66:1;
-    drone.style.transform=`translate(${curX-55}px,${curY-55}px) rotate(${curTilt}deg) scale(${s})`;
+    const w=innerWidth,h=innerHeight,small=w<900;
+    const p=scrollP();
+    const flightScale=small?.72:1.28;
 
-    // trail update (staggered)
-    if(frame%4===0){
+    // Flight target: hover high, gentle weave so the light stays on content
+    const amp=Math.min(w*.16,200);
+    const fx=w*.5+amp*Math.sin(p*Math.PI*2.4);
+    const fy=h*.145+Math.sin(performance.now()/700)*8;
+
+    // Landing blend near journey's end
+    const L=Math.max(0,Math.min((p-.90)/.085,1));
+    const E=L*L*(3-2*L); // smoothstep
+    let tx=fx,ty=fy,ts=flightScale;
+    if(E>0&&dock){
+      const r=dock.getBoundingClientRect();
+      if(r.width>0){
+        tx=fx+((r.left+r.width/2)-fx)*E;
+        ty=fy+((r.top+r.height/2)-fy)*E;
+        ts=flightScale+((r.width/110)-flightScale)*E;
+      }
+    }
+    curX+=(tx-curX)*.09;curY+=(ty-curY)*.09;
+    const vx=curX-lastX;lastX=curX;
+    const tilt=Math.max(-10,Math.min(10,vx*1.4))*(1-E);
+    curTilt+=(tilt-curTilt)*.12;
+    drone.style.transform=`translate(${curX-55}px,${curY-55}px) rotate(${curTilt}deg) scale(${ts})`;
+
+    // Touchdown: the flying drone becomes the logo's drone
+    if(E>=.995&&!landed){landed=true;drone.style.opacity='0';dock.classList.add('landed');}
+    if(E<.995&&landed){landed=false;drone.style.opacity='1';dock.classList.remove('landed');}
+
+    // Searchlight pool beneath the drone
+    const lx=curX,ly=h*.56;
+    const lrx=small?Math.max(w*.66,300):Math.min(w*.40,560);
+    const lry=small?h*.42:h*.37;
+    layer.style.setProperty('--lx',lx+'px');
+    layer.style.setProperty('--ly',ly+'px');
+    layer.style.setProperty('--lrx',lrx+'px');
+    layer.style.setProperty('--lry',lry+'px');
+    const lift=1-E; // veil lifts as the drone lands
+    veil.style.opacity=lift;
+    glow.style.opacity=lift;
+
+    // Light cone from drone to pool
+    const bw=lrx*1.5,btop=curY+40*ts,bh=Math.max(ly-btop+lry*.3,0);
+    beam.style.left=(curX-bw/2)+'px';
+    beam.style.top=btop+'px';
+    beam.style.width=bw+'px';
+    beam.style.height=bh+'px';
+    beam.style.opacity=lift*.9;
+
+    // Subtle wake
+    if(frame%5===0){
       for(let i=TRAILN-1;i>0;i--){trails[i].x=trails[i-1].x;trails[i].y=trails[i-1].y}
-      trails[0].x=curX;trails[0].y=curY+14;
+      trails[0].x=curX;trails[0].y=curY+10;
     }
     trails.forEach((t,i)=>{
       t.el.style.transform=`translate(${t.x}px,${t.y}px) scale(${1-i/TRAILN})`;
-      t.el.style.opacity=(0.32*(1-i/TRAILN)).toFixed(2);
+      t.el.style.opacity=(lift*.25*(1-i/TRAILN)).toFixed(2);
     });
 
     // HUD
+    hud.style.opacity=lift;
     if(frame%12===0){
-      hudSector.textContent=nearestSector();
-      hudAlt.textContent=String(Math.round(60+p*340)).padStart(3,'0')+' M';
+      hudSector.textContent=E>=.995?'DOCKED · MISSION COMPLETE':(E>0?'FINAL APPROACH':nearestSector());
+      hudAlt.textContent=String(Math.round(60+(1-E)*p*340)).padStart(3,'0')+' M';
     }
     frame++;
     requestAnimationFrame(animate);
