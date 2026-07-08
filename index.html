@@ -361,14 +361,18 @@ footer{padding:70px 0 36px;position:relative;z-index:2}
 .padring.p2{width:112px;height:112px;animation-delay:.9s;border-color:rgba(255,160,60,.6)}
 @keyframes padpulse{0%,100%{opacity:1}50%{opacity:.3}}
 .padH{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%) scaleY(.55);font-family:var(--disp);font-weight:800;font-size:34px;color:#FFB35C;text-shadow:0 0 18px rgba(255,138,30,.8)}
-.lander{position:absolute;left:50%;top:16%;width:74px;margin-left:-37px;animation:landcycle 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 16px rgba(0,0,0,.7)) drop-shadow(0 0 10px rgba(255,138,30,.25))}
-@keyframes landcycle{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}55%{transform:translateY(66px)}75%{transform:translateY(66px);opacity:1}92%,100%{transform:translateY(-30px);opacity:0}}
 @keyframes charge{0%{transform:scaleX(.1)}80%,100%{transform:scaleX(1)}}
+/* — Collapsed suite banners: uniform dark strip, photo zooms paused — */
+.stab .scene img{transition:filter .5s ease}
+.stab:not(.active) .scene img{filter:brightness(.38) saturate(.7);animation-play-state:paused}
+.stab:not(.active) .scene::after{background:linear-gradient(180deg,rgba(6,10,18,.40) 0%,rgba(6,10,18,.78) 100%)!important}
+.stab:not(.active) .sc-vision .hudtag,.stab:not(.active) .sc-vision .zoomtag,.stab:not(.active) .sc-cc .cctag,.stab:not(.active) .sc-vision .corner{opacity:0;transition:opacity .3s}
+
 /* — Narrative drone suppression attachments — */
 .tline{position:absolute;width:3px;background:repeating-linear-gradient(180deg,rgba(58,192,143,.9) 0 8px,rgba(58,192,143,.25) 8px 14px);animation:tetherflow 1s linear infinite;transform-origin:1.5px 0;display:none;left:0;top:0}
 @keyframes tetherflow{to{background-position:0 -14px}}
-.jetline{position:absolute;width:4px;border-radius:3px;background:linear-gradient(180deg,rgba(175,222,255,.95),rgba(175,222,255,.10));transform-origin:2px 0;filter:blur(1px);display:none;left:0;top:0}
 .paydot{position:absolute;width:8px;height:12px;border-radius:3px;background:#FF5A2A;border:1px solid rgba(255,200,120,.8);display:none;left:0;top:0;box-shadow:0 0 8px rgba(255,90,42,.6)}
+.spraydot{position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(175,222,255,.92);display:none;left:0;top:0;box-shadow:0 0 6px rgba(175,222,255,.5)}
 .sup-card .hifire,.sup-card .gfire{transition:filter 1.2s ease}
 .sup-card.suppressing .hifire{filter:blur(6px) brightness(.28) saturate(.6)}
 .sup-card.suppressing .gfire{filter:blur(8px) brightness(.32) saturate(.6)}
@@ -569,7 +573,6 @@ header.hero,section,.band,.mega{transition:opacity .55s linear}
         <div class="scene sc-dock">
           <div class="padring p1"></div><div class="padring p2"></div>
           <div class="padH">H</div>
-          <svg class="lander" viewBox="0 0 60 24"><line x1="6" y1="8" x2="22" y2="14" stroke="#8D98AB" stroke-width="2.4"/><line x1="54" y1="8" x2="38" y2="14" stroke="#8D98AB" stroke-width="2.4"/><ellipse cx="6" cy="7" rx="10" ry="2.2" fill="rgba(237,241,247,.85)"/><ellipse cx="54" cy="7" rx="10" ry="2.2" fill="rgba(237,241,247,.85)"/><rect x="21" y="11" width="18" height="10" rx="4.5" fill="#22335A" stroke="#FFB35C" stroke-width="1.8"/><circle cx="30" cy="16" r="2.2" fill="#FF8A1E"><animate attributeName="opacity" values="1;.3;1" dur="1.2s" repeatCount="indefinite"/></circle></svg>
         </div>
         <div class="collapsed"><b>AUTO-DOCK STATIONS</b><small>04</small></div>
         <div class="body">
@@ -876,10 +879,14 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
   const tetherCard=document.getElementById('tetherCard');
   const dropCard=document.getElementById('dropCard');
   const fadeEls=[...document.querySelectorAll('header.hero,section,.band,.mega')];
+  const dockStab=document.querySelector('.sc-dock')?.closest('.stab');
 
   // attachments the drone deploys during suppression demos
   const tline=document.createElement('div');tline.className='tline';layer.appendChild(tline);
-  const jet=document.createElement('div');jet.className='jetline';layer.appendChild(jet);
+  const sprays=Array.from({length:6},(_,i)=>{
+    const d=document.createElement('div');d.className='spraydot';layer.appendChild(d);
+    return{el:d,t:i/6,k:(i%2?1:-1)*(.4+(i%3)*.35)};
+  });
   const pays=[0,.33,.66].map(t0=>{
     const d=document.createElement('div');d.className='paydot';layer.appendChild(d);
     return{el:d,t:t0};
@@ -932,14 +939,16 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
     const E=L*L*(3-2*L);
     const rT=E>0?null:inBand(tetherCard);
     const rD=(E>0||rT)?null:inBand(dropCard);
-    const phase=E>0?'LAND':(rT?'TETHER':(rD?'DROP':'FLIGHT'));
+    const rK=(E>0||rT||rD||!dockStab||!dockStab.classList.contains('active'))?null:inBand(dockStab);
+    const phase=E>0?'LAND':(rT?'TETHER':(rD?'DROP':(rK?'DOCK':'FLIGHT')));
 
     // ---- drone target ----
-    const amp=Math.min(w*.14,180);
-    let tx=w*.5+amp*Math.sin(p*Math.PI*2.4);
+    // slow left→right searchlight swing — the game-style scan
+    const swing=Math.sin(performance.now()/3900)*Math.min(w*.30,430);
+    let tx=w*.5+swing;
     let ty=h*.145+Math.sin(performance.now()/700)*8;
     let ts=flightScale;
-    let px_t=w*.5+(curX-w*.5)*.35, py_t=h*.56; // light anchored to content column
+    let px_t=curX, py_t=h*.56; // the light pool rides directly under the drone
 
     if(phase==='TETHER'){
       tx=rT.left+rT.width*.47;
@@ -949,10 +958,15 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
       tx=rD.left+rD.width*.45;
       ty=Math.max(rD.top-46,88)+Math.sin(performance.now()/700)*6;
       px_t=rD.left+rD.width*.5;py_t=rD.top+rD.height*.5;
+    }else if(phase==='DOCK'){
+      tx=rK.left+rK.width*.5;
+      ty=rK.top+rK.height*.50+Math.sin(performance.now()/650)*4;
+      ts=flightScale*.85;
+      px_t=rK.left+rK.width*.5;py_t=rK.top+rK.height*.5;
     }else if(phase==='LAND'&&dock){
       const r=dock.getBoundingClientRect();
       if(r.width>0){
-        const fx=w*.5+amp*Math.sin(p*Math.PI*2.4),fy=h*.145;
+        const fx=w*.5+swing,fy=h*.145;
         tx=fx+((r.left+r.width/2)-fx)*E;
         ty=fy+((r.top+r.height/2)-fy)*E;
         ts=flightScale+((r.width/110)-flightScale)*E;
@@ -1011,10 +1025,20 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
       const bx=rT.left+rT.width*.47,by=rT.top+rT.height*.92;
       const fx=rT.left+rT.width*.33,fy=rT.top+rT.height*.38;
       tline.style.display='block';aim(tline,curX,dyA,bx,by);
-      jet.style.display='block';aim(jet,curX-6,dyA-6,fx,fy);
+      sprays.forEach(sd=>{
+        sd.t+=.018;if(sd.t>1)sd.t-=1;
+        const q=sd.t;
+        const sx=(curX-6)+(fx-(curX-6))*q+Math.sin(q*Math.PI)*8*sd.k;
+        const sy=(dyA-6)+(fy-(dyA-6))*q+Math.sin(q*Math.PI)*14;
+        sd.el.style.display='block';
+        sd.el.style.left=sx+'px';sd.el.style.top=sy+'px';
+        sd.el.style.opacity=(q<.05||q>.9)?0:(.9-q*.4);
+        sd.el.style.transform='scale('+(1-q*.45)+')';
+      });
       tetherCard.classList.add('suppressing');
     }else{
-      tline.style.display='none';jet.style.display='none';
+      tline.style.display='none';
+      sprays.forEach(sd=>sd.el.style.display='none');
       tetherCard&&tetherCard.classList.remove('suppressing');
     }
     if(phase==='DROP'){
@@ -1063,6 +1087,7 @@ document.getElementById('cform').addEventListener('submit',async ev=>{
       else if(phase==='LAND')sec='FINAL APPROACH';
       else if(phase==='TETHER')sec='TETHER SUPPRESSION · LIVE';
       else if(phase==='DROP')sec='PAYLOAD DROP · LIVE';
+      else if(phase==='DOCK')sec='AUTO-DOCK · LANDING DEMO';
       else sec=nearestSector();
       hudSector.textContent=sec;
       hudAlt.textContent=String(Math.round(60+(1-E)*p*340)).padStart(3,'0')+' M';
