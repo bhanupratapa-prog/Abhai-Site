@@ -1,0 +1,65 @@
+{
+  "assets": [
+    {
+      "path": "prototype/assets/firedome-preview.png",
+      "bytes": 2184559,
+      "sha256": "7d05ebfa79250d2ffdc8de6ff067946c11ddb2e1c0f5fc6c9bba4e2d76ac6a0f",
+      "parts": [
+        "_prototype_media/firedome-preview.png/part-000",
+        "_prototype_media/firedome-preview.png/part-001",
+        "_prototype_media/firedome-preview.png/part-002",
+        "_prototype_media/firedome-preview.png/part-003",
+        "_prototype_media/firedome-preview.png/part-004",
+        "_prototype_media/firedome-preview.png/part-005",
+        "_prototype_media/firedome-preview.png/part-006",
+        "_prototype_media/firedome-preview.png/part-007",
+        "_prototype_media/firedome-preview.png/part-008",
+        "_prototype_media/firedome-preview.png/part-009",
+        "_prototype_media/firedome-preview.png/part-010",
+        "_prototype_media/firedome-preview.png/part-011"
+      ]
+    },
+    {
+      "path": "prototype/assets/mumbai-demo.mp4",
+      "bytes": 2654534,
+      "sha256": "aa4d5e3d271b06e6981240364d652195f4349e3a9cf5432c29811bc27cfff2ba",
+      "parts": [
+        "_prototype_media/mumbai-demo.mp4/part-000",
+        "_prototype_media/mumbai-demo.mp4/part-001",
+        "_prototype_media/mumbai-demo.mp4/part-002",
+        "_prototype_media/mumbai-demo.mp4/part-003",
+        "_prototype_media/mumbai-demo.mp4/part-004",
+        "_prototype_media/mumbai-demo.mp4/part-005",
+        "_prototype_media/mumbai-demo.mp4/part-006",
+        "_prototype_media/mumbai-demo.mp4/part-007",
+        "_prototype_media/mumbai-demo.mp4/part-008",
+        "_prototype_media/mumbai-demo.mp4/part-009",
+        "_prototype_media/mumbai-demo.mp4/part-010",
+        "_prototype_media/mumbai-demo.mp4/part-011",
+        "_prototype_media/mumbai-demo.mp4/part-012",
+        "_prototype_media/mumbai-demo.mp4/part-013"
+      ]
+    },
+    {
+      "path": "prototype/assets/ABHAI_FireDome_Technical_Kit.zip",
+      "bytes": 2720975,
+      "sha256": "915af59c1256e7ba08941a1e219be56cfadf5e9aa3f90d1f1a4bdd17df062422",
+      "parts": [
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-000",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-001",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-002",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-003",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-004",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-005",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-006",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-007",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-008",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-009",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-010",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-011",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-012",
+        "_prototype_media/ABHAI_FireDome_Technical_Kit.zip/part-013"
+      ]
+    }
+  ]
+}

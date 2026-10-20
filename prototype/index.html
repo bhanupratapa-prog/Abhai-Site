@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111a1b"><meta name="description" content="ABHAI FireDome command demonstration. Explore recorded Mumbai evidence and simulated Valmiki and Patna response scenarios.">
+<link rel="canonical" href="https://www.abhai.io/prototype">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ABHAI FireDome · Interactive command prototype">
+<meta property="og:description" content="Explore ABHAI’s recorded Mumbai demonstration and simulated Valmiki and Patna incident-response scenarios.">
+<meta property="og:url" content="https://www.abhai.io/prototype">
+<meta property="og:image" content="https://www.abhai.io/prototype/assets/firedome-preview.png">
+<meta property="og:image:alt" content="Illustrative ABHAI FireDome concept: an observation drone above forest and urban terrain.">
+<meta name="twitter:card" content="summary_large_image">
+<title>ABHAI FireDome · Command</title><link rel="stylesheet" href="/prototype/styles.css">
+</head>
+<body>
+<aside class="rail">
+ <a class="brand" href="#command" aria-label="ABHAI FireDome home"><span class="brand-symbol">A</span><span>ABH<b>AI</b><small>FIREDOME</small></span></a>
+ <div class="rail-label">OPERATIONS</div>
+ <nav id="navigation" aria-label="Main navigation"></nav>
+ <div class="rail-footer"><span class="partner-mark">AERIAL INTELLIGENCE.<br>HUMAN COMMAND.</span><div class="partner">Technology partnership<br><b>MENAPS · Indrones</b></div><button class="rail-info" id="scopeButton">ⓘ &nbsp; About this prototype</button><small>CONCEPT RELEASE / 01</small></div>
+</aside>
+<div class="workspace">
+ <header class="topbar"><div class="breadcrumb">ABHAI ecosystem <span>/</span> <b id="pageCrumb">Command centre</b></div><div class="top-actions"><span class="demo-badge"><i></i> DEMONSTRATION</span><button id="tourButton" class="button subtle">▶ Guided demo</button><button id="presentButton" class="icon-button" title="Presentation mode" aria-label="Toggle presentation mode">⛶</button><span class="avatar" title="Demonstration operator">BP</span></div></header>
+ <main>
+  <section class="page-heading"><div><div class="eyebrow">FIRE INTELLIGENCE & RESPONSE</div><h1 id="pageTitle">Every signal. One operational picture.</h1><p id="pageDescription">From an early observation to a coordinated response.</p></div><div class="heading-actions"><button id="evidenceButton" class="button">▷ Mumbai evidence</button><button id="briefButton" class="button primary">Export briefing ↗</button></div></section>
+  <section class="scenario-strip" aria-label="Pilot scenario"><div class="scenario-tabs" id="scenarioTabs"></div><div class="scenario-note"><span class="dot"></span><span id="scenarioNote">Illustrative pilot • no live feeds</span></div></section>
+  <div id="tourPanel" class="tour-panel" hidden></div>
+  <div id="content"></div>
+  <footer class="workspace-footer"><span>ABHAI FIREDOME <span class="footer-separator">/</span> Government command prototype</span><span>Recorded evidence + simulated scenarios · No aircraft or emergency-service connection</span></footer>
+ </main>
+</div>
+<dialog id="modal"><div class="dialog-head"><div><div id="modalEyebrow" class="eyebrow"></div><h2 id="modalTitle"></h2></div><button id="closeModal" class="icon-button" aria-label="Close dialog">×</button></div><div id="modalBody"></div></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/prototype/data.js"></script><script src="/prototype/terrain.js"></script><script src="/prototype/app.js"></script>
+</body></html>
